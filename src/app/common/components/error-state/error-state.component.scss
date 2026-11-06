@@ -1,0 +1,30 @@
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  background: var(--color-surface-2);
+  border: 1px solid rgba(220, 53, 69, 0.4);
+  border-radius: 8px;
+
+  &__message {
+    margin: 0;
+    color: #ffffff;
+  }
+
+  &__retry {
+    padding: 8px 20px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--color-danger);
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

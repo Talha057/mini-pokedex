@@ -1,0 +1,16 @@
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  background: var(--color-surface-2);
+  border-radius: 8px;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+
+  &__message {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}

@@ -1,0 +1,41 @@
+@use 'sass:list';
+
+// type name: (background, text colour)
+$type-colors: (
+  normal: (#a8a77a, #131515),
+  fire: (#ee8130, #131515),
+  water: (#6390f0, #ffffff),
+  electric: (#f7d02c, #131515),
+  grass: (#7ac74c, #131515),
+  ice: (#96d9d6, #131515),
+  fighting: (#c22e28, #ffffff),
+  poison: (#a33ea1, #ffffff),
+  ground: (#e2bf65, #131515),
+  flying: (#a98ff3, #131515),
+  psychic: (#f95587, #ffffff),
+  bug: (#a6b91a, #131515),
+  rock: (#b6a136, #131515),
+  ghost: (#735797, #ffffff),
+  dragon: (#6f35fc, #ffffff),
+  dark: (#705746, #ffffff),
+  steel: (#b7b7ce, #131515),
+  fairy: (#d685ad, #131515)
+);
+
+.type-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 100px;
+  background: var(--color-secondary);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+
+  @each $name, $pair in $type-colors {
+    &[data-type='#{$name}'] {
+      background: list.nth($pair, 1);
+      color: list.nth($pair, 2);
+    }
+  }
+}

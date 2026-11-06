@@ -1,0 +1,6 @@
+@use '../../styles/shared' as *;
+
+.skeleton {
+  @extend %sk-shimmer;
+  display: block;
+}

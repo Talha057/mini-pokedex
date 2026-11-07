@@ -1,0 +1,138 @@
+@use '../../../common/styles/shared' as *;
+
+.picker {
+  position: relative;
+
+  &__label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 8px;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px 2px 4px;
+    background: var(--color-surface-2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 100px;
+    text-transform: capitalize;
+
+    img {
+      image-rendering: pixelated;
+    }
+  }
+
+  &__chip-remove {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-danger);
+    }
+  }
+
+  &__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    background: var(--color-surface-2);
+    color: #ffffff;
+    font: inherit;
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__hint {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__panel {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 5;
+    max-height: 320px;
+    margin-top: 4px;
+    overflow-y: auto;
+    background: var(--color-surface-2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    @include custom-scrollbar;
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 6px 12px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-transform: capitalize;
+    cursor: pointer;
+
+    img {
+      image-rendering: pixelated;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.06);
+      outline: none;
+    }
+  }
+
+  &__id {
+    margin-left: auto;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &__empty {
+    margin: 0;
+    padding: 16px 12px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}

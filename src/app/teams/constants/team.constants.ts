@@ -14,3 +14,5 @@ export const TEMP_ID_PREFIX = 'temp-';
 export const TEAMS_LOAD_ERROR_MESSAGE = 'Could not load teams. Check your connection and try again.';
 export const CREATE_TEAM_ERROR_MESSAGE = 'Could not create the team. It was removed from the list.';
 export const DELETE_TEAM_ERROR_MESSAGE = 'Could not delete the team. It was restored to the list.';
+
+export const PICKER_MAX_SUGGESTIONS = 8;

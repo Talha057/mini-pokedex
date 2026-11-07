@@ -1,0 +1,78 @@
+<div class="picker">
+  <label class="picker__label" for="pokemon-search">
+    Pokémon ({{ selected().length }}/{{ maxItems() }})
+  </label>
+
+  @if (selected().length > 0) {
+    <ul class="picker__chips" aria-label="Selected Pokémon">
+      @for (pokemon of selected(); track pokemon.id) {
+        <li class="picker__chip">
+          <img [src]="pokemon.spriteUrl" width="28" height="28" alt="" />
+          <span>{{ pokemon.name }}</span>
+          <button
+            type="button"
+            class="picker__chip-remove"
+            [attr.aria-label]="'Remove ' + pokemon.name"
+            (click)="pokemonRemove.emit(pokemon.id)"
+          >
+            ×
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  <input
+    #searchInput
+    id="pokemon-search"
+    class="picker__input"
+    type="text"
+    autocomplete="off"
+    [disabled]="isFull()"
+    [placeholder]="isFull() ? 'Team is full' : 'Search Pokémon by name'"
+    [attr.aria-expanded]="isOpen()"
+    aria-controls="pokemon-suggestions"
+    (input)="onInput(searchInput.value)"
+    (keydown.enter)="onEnter($event)"
+    (keydown.escape)="clear()"
+    (blur)="pickerTouched.emit()"
+  />
+
+  @if (isFull()) {
+    <p class="picker__hint">You can add up to {{ maxItems() }} Pokémon.</p>
+  }
+
+  @if (isOpen()) {
+    <div class="picker__panel" id="pokemon-suggestions" aria-live="polite">
+      @switch (search().status) {
+        @case ('loading') {
+          <div class="picker__loading" aria-busy="true">
+            @for (row of skeletonRows; track row) {
+              <app-skeleton height="32px" />
+            }
+          </div>
+        }
+        @case ('error') {
+          <app-error-state message="Could not load Pokémon." (retry)="retry()" />
+        }
+        @default {
+          @if (suggestions().length > 0) {
+            <ul class="picker__list">
+              @for (pokemon of suggestions(); track pokemon.id) {
+                <li>
+                  <button type="button" class="picker__option" (click)="choose(pokemon)">
+                    <img [src]="pokemon.spriteUrl" width="32" height="32" alt="" />
+                    <span>{{ pokemon.name }}</span>
+                    <span class="picker__id">#{{ pokemon.id }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="picker__empty">No Pokémon match "{{ search().term }}".</p>
+          }
+        }
+      }
+    </div>
+  }
+</div>

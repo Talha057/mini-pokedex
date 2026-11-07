@@ -3,7 +3,7 @@ import { SkeletonComponent } from '../../../common/components/skeleton/skeleton.
 import { TypeBadgeComponent } from '../../../common/components/type-badge/type-badge.component';
 import { SortDirection, SortField } from '../../../pokedex/models/pokemon-state.model';
 import { Pokemon, StatName } from '../../../pokedex/models/pokemon.model';
-
+import { STAT_LABELS, STAT_NAMES } from '../../../pokedex/constants/pokedex.constants';
 type ColumnField = StatName | 'total';
 
 interface StatColumn {
@@ -12,12 +12,7 @@ interface StatColumn {
 }
 
 const STAT_COLUMNS: StatColumn[] = [
-  { field: 'hp', label: 'HP' },
-  { field: 'attack', label: 'Attack' },
-  { field: 'defense', label: 'Defense' },
-  { field: 'special-attack', label: 'Sp. Atk' },
-  { field: 'special-defense', label: 'Sp. Def' },
-  { field: 'speed', label: 'Speed' },
+  ...STAT_NAMES.map((field) => ({ field, label: STAT_LABELS[field] })),
   { field: 'total', label: 'Total' },
 ];
 

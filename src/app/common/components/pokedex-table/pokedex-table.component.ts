@@ -41,6 +41,8 @@ export class PokedexTableComponent {
   readonly skeletonRows = computed(() =>
     Array.from({ length: this.skeletonRowCount() }, (_, index) => index),
   );
+  readonly selectedId = input<number | null>(null);
+readonly rowSelect = output<Pokemon>();
 
   statValue(row: Pokemon, field: ColumnField): number {
     return field === 'total' ? row.total : row.stats[field];

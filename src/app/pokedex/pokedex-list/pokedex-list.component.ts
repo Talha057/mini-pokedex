@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject,signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { EmptyStateComponent } from '../../common/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '../../common/components/error-state/error-state.component';
@@ -8,11 +8,12 @@ import { SortField } from '../models/pokemon-state.model';
 import { Pokemon } from '../models/pokemon.model';
 import { PokemonSelectors } from '../state/pokemon.selectors';
 import { PokemonStore } from '../state/pokemon.store';
+import { PokemonDetailPanelComponent } from '../components/pokemon-detail-panel/pokemon-detail-panel.component';
 
 @Component({
   selector: 'app-pokedex-list-page',
   standalone: true,
-  imports: [PokedexTableComponent, EmptyStateComponent, ErrorStateComponent],
+  imports: [PokedexTableComponent, EmptyStateComponent, ErrorStateComponent,PokemonDetailPanelComponent],
   templateUrl: './pokedex-list.component.html',
   styleUrl: './pokedex-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +42,15 @@ export class PokedexListPage implements OnInit {
   readonly isReady = computed(() => this.status() === 'success');
   readonly canGoPrevious = computed(() => this.pageIndex() > 0);
   readonly canGoNext = computed(() => this.pageIndex() < this.pageCount() - 1);
+readonly selectedPokemon = signal<Pokemon | null>(null);
 
+onRowSelect(pokemon: Pokemon): void {
+  this.selectedPokemon.set(pokemon);
+}
+
+closePanel(): void {
+  this.selectedPokemon.set(null);
+}
   ngOnInit(): void {
     this.store.load();
   }

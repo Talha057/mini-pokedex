@@ -46,6 +46,19 @@
     td {
       padding: 0 8px;
     }
+    &--interactive {
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
+    outline: none;
+  }
+}
+
+&--selected {
+  background: rgba(0, 122, 204, 0.18);
+}
   }
 
   &__sprite {

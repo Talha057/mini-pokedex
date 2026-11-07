@@ -38,6 +38,8 @@
     />
   } @else {
     <app-pokedex-table
+    [selectedId]="selectedPokemon()?.id ?? null"
+(rowSelect)="onRowSelect($event)"
       [rows]="rows()"
       [loading]="!isReady()"
       [sortField]="sortField()"
@@ -66,4 +68,7 @@
       </nav>
     }
   }
+  @if (selectedPokemon(); as pokemon) {
+  <app-pokemon-detail-panel [pokemon]="pokemon" (close)="closePanel()" />
+}
 </main>

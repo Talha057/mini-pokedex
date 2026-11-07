@@ -40,7 +40,13 @@
         }
       } @else {
         @for (row of rows(); track row.id) {
-          <tr class="pokedex-table__row">
+          <tr
+  class="pokedex-table__row pokedex-table__row--interactive"
+  [class.pokedex-table__row--selected]="row.id === selectedId()"
+  tabindex="0"
+  (click)="rowSelect.emit(row)"
+  (keydown.enter)="rowSelect.emit(row)"
+>
             <td>
               <img
                 class="pokedex-table__sprite"

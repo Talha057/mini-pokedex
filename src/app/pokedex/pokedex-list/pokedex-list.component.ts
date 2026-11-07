@@ -25,7 +25,6 @@ export class PokedexListPage implements OnInit {
   private readonly store = inject(PokemonStore);
   private readonly selectors = inject(PokemonSelectors);
 
-  // Store selectors bridged into signals for the template
   readonly status = toSignal(this.selectors.status$, { initialValue: 'idle' as const });
   readonly errorMessage = toSignal(this.selectors.errorMessage$, { initialValue: null });
   readonly rows = toSignal(this.selectors.paged$, { initialValue: [] as Pokemon[] });
@@ -38,7 +37,6 @@ export class PokedexListPage implements OnInit {
   readonly pageCount = toSignal(this.selectors.pageCount$, { initialValue: 1 });
   readonly totalCount = toSignal(this.selectors.totalCount$, { initialValue: 0 });
 
-  // Derived UI state
   readonly isReady = computed(() => this.status() === 'success');
   readonly canGoPrevious = computed(() => this.pageIndex() > 0);
   readonly canGoNext = computed(() => this.pageIndex() < this.pageCount() - 1);

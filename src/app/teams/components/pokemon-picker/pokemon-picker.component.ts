@@ -49,7 +49,6 @@ export class PokemonPickerComponent implements OnInit {
 
   readonly searchText = signal('');
 
-  // debounce -> distinct -> switchMap; toSignal unsubscribes when the component is destroyed
   readonly search = toSignal(
     this.term$.pipe(
       debounceTime(SEARCH_DEBOUNCE_MS),
@@ -81,7 +80,7 @@ export class PokemonPickerComponent implements OnInit {
   }
 
   onEnter(event: Event): void {
-    event.preventDefault(); // Enter must not submit the surrounding form
+    event.preventDefault(); 
     const first = this.suggestions()[0];
     if (first) this.choose(first);
   }
@@ -101,7 +100,6 @@ export class PokemonPickerComponent implements OnInit {
     this.store.load();
   }
 
-  // Follows the cache status, so the dropdown goes loading -> ready by itself
   private search$(term: string): Observable<SearchState> {
     if (!term) return of(IDLE);
     return combineLatest([this.selectors.status$, this.selectors.entities$]).pipe(

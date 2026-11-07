@@ -34,19 +34,16 @@ export class TeamListPage implements OnInit {
   private readonly cache = inject(CacheService);
   private readonly destroyRef = inject(DestroyRef);
 
-  // Store streams bridged into signals for the template
   readonly status = toSignal(this.teamStore.status$, { initialValue: 'idle' as LoadStatus });
   readonly errorMessage = toSignal(this.teamStore.errorMessage$, { initialValue: null });
   readonly mutationError = toSignal(this.teamStore.mutationError$, { initialValue: null });
   readonly teams = toSignal(this.teamStore.teams$, { initialValue: [] as Team[] });
   readonly pokemonState = toSignal(this.pokemonStore.state$, { requireSync: true });
 
-  // UI state: restored from storage, written back by the effect below
   readonly selectedTeamId = signal<string | null>(
     this.cache.get<string>(SELECTED_TEAM_CACHE_KEY),
   );
 
-  // Derived state
   readonly statsStatus = computed(() => this.pokemonState().status);
   private readonly pokemonById = computed(
     () => new Map(this.pokemonState().entities.map((pokemon) => [pokemon.id, pokemon])),
@@ -62,7 +59,6 @@ export class TeamListPage implements OnInit {
   );
 
   constructor() {
-    // Persist the selected team so it survives a reload
     effect(() => {
       const id = this.selectedTeamId();
       if (id) {
@@ -83,7 +79,6 @@ export class TeamListPage implements OnInit {
   }
 
   onDelete(id: string): void {
-    // The store has already rolled back and set the error message on failure
     this.teamStore
       .deleteTeam(id)
       .pipe(

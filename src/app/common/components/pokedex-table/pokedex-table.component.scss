@@ -38,7 +38,6 @@
     }
   }
 
-  // fixed height keeps skeleton rows and real rows the same size (no layout jump)
   &__row {
     height: 56px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);

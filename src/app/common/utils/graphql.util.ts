@@ -5,7 +5,6 @@ export interface GraphqlResponse<T> {
   errors?: { message: string }[];
 }
 
-/** Unwraps a GraphQL HTTP response, throwing when it carries errors or no data. */
 export function unwrapGraphql<T>(): OperatorFunction<GraphqlResponse<T>, T> {
   return map((response) => {
     if (response.errors?.length || !response.data) {

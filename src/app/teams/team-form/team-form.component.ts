@@ -37,14 +37,12 @@ export class TeamFormPage implements OnInit {
     }),
   });
 
-  // Reading this in the template re-renders the OnPush view when async validation finishes
   readonly formStatus = toSignal(this.form.statusChanges, { initialValue: this.form.status });
 
   ngOnInit(): void {
     this.teamStore.load(); // the name validator needs the existing teams
   }
 
-  /** Name error text, shown only once the field has been touched or edited. */
   nameError(): string | null {
     const control = this.form.controls.name;
     if (!(control.touched || control.dirty) || !control.errors) return null;
@@ -56,7 +54,6 @@ export class TeamFormPage implements OnInit {
     return null;
   }
 
-  /** Member count error text, shown only once the picker has been used. */
   membersError(): string | null {
     const control = this.form.controls.members;
     if (!(control.touched || control.dirty) || !control.errors) return null;
@@ -88,8 +85,7 @@ export class TeamFormPage implements OnInit {
     if (this.form.invalid) return;
 
     const { name, members } = this.form.getRawValue();
-    // Optimistic: the team shows up in the list at once and is rolled back by the store on
-    // failure. Not tied to this component, because the request must finish after navigation.
+
     this.teamStore
       .createTeam({ name: name.trim(), pokemonIds: members.map((member) => member.id) })
       .subscribe({ error: () => undefined }); // the store already reports the failure

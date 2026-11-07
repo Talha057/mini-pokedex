@@ -50,4 +50,22 @@
     padding: 0;
     list-style: none;
   }
+  &__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+&__new {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
 }

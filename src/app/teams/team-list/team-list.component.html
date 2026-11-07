@@ -1,10 +1,13 @@
 <main class="teams">
   <header class="teams__header">
-    <h1 class="teams__title">Teams</h1>
+  <h1 class="teams__title">Teams</h1>
+  <div class="teams__header-actions">
     @if (status() === 'success') {
       <p class="teams__count">{{ teams().length }} teams</p>
     }
-  </header>
+    <a class="teams__new" routerLink="/teams/new">New team</a>
+  </div>
+</header>
 
   @if (mutationError(); as message) {
     <div class="teams__alert" role="alert">

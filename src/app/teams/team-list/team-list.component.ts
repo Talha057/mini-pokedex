@@ -15,11 +15,12 @@ import { SELECTED_TEAM_CACHE_KEY, TEAMS_LOAD_ERROR_MESSAGE } from '../constants/
 import { Team } from '../models/team.model';
 import { TeamView } from '../models/team-view.model';
 import { TeamStore } from '../state/team.store';
+import { RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-team-list-page',
   standalone: true,
-  imports: [EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TeamCardComponent],
+  imports: [EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TeamCardComponent,RouterLink],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

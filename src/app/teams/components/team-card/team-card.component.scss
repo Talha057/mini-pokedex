@@ -1,0 +1,129 @@
+.team-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  &--selected {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  &--pending {
+    opacity: 0.7;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__name {
+    flex: 1;
+    margin: 0;
+    font-size: 18px;
+  }
+
+  &__name-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  &__tag {
+    padding: 2px 10px;
+    border-radius: 100px;
+    background: var(--color-primary);
+    font-size: 12px;
+    font-weight: 600;
+
+    &--saving {
+      background: var(--color-secondary);
+    }
+  }
+
+  &__delete,
+  &__retry {
+    padding: 6px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+
+  &__members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    img {
+      display: block;
+      image-rendering: pixelated;
+    }
+  }
+
+  // fixed height keeps the card the same size while stats load
+  &__summary {
+    min-height: 64px;
+  }
+
+  &__summary-loading {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__total {
+    margin: 0 0 8px;
+  }
+
+  &__types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__type {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__count,
+  &__note,
+  &__meta {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__meta {
+    margin: 0;
+  }
+}

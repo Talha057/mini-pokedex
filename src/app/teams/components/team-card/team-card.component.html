@@ -1,0 +1,74 @@
+<article
+  class="team-card"
+  [class.team-card--selected]="selected()"
+  [class.team-card--pending]="view().pending"
+>
+  <header class="team-card__header">
+    <h2 class="team-card__name">
+      <button
+        type="button"
+        class="team-card__name-btn"
+        [attr.aria-pressed]="selected()"
+        (click)="teamSelect.emit(view().team.id)"
+      >
+        {{ view().team.name }}
+      </button>
+    </h2>
+    @if (selected()) {
+      <span class="team-card__tag">Selected</span>
+    }
+    @if (view().pending) {
+      <span class="team-card__tag team-card__tag--saving">Saving…</span>
+    }
+    <button
+      type="button"
+      class="team-card__delete"
+      [disabled]="view().pending"
+      [attr.aria-label]="'Delete team ' + view().team.name"
+      (click)="teamDelete.emit(view().team.id)"
+    >
+      Delete
+    </button>
+  </header>
+
+  <ul class="team-card__members">
+    @for (id of view().team.pokemonIds; track id) {
+      <li>
+        <img [src]="spriteUrl(id)" width="56" height="56" alt="" loading="lazy" />
+      </li>
+    }
+  </ul>
+
+  <div class="team-card__summary" aria-live="polite">
+    @switch (statsStatus()) {
+      @case ('success') {
+        <p class="team-card__total">
+          Total base stats <strong>{{ totalBaseStats() }}</strong>
+          @if (missingCount() > 0) {
+            <span class="team-card__note">({{ missingCount() }} not found in the Pokédex)</span>
+          }
+        </p>
+        <div class="team-card__types">
+          @for (entry of typeDistribution(); track entry.type) {
+            <span class="team-card__type">
+              <app-type-badge [type]="entry.type" />
+              <span class="team-card__count">×{{ entry.count }}</span>
+            </span>
+          }
+        </div>
+      }
+      @case ('error') {
+        <p class="team-card__note">Stats unavailable.</p>
+        <button type="button" class="team-card__retry" (click)="statsRetry.emit()">Retry</button>
+      }
+      @default {
+        <div class="team-card__summary-loading" aria-busy="true">
+          <app-skeleton width="50%" height="16px" />
+          <app-skeleton width="70%" height="20px" radius="100px" />
+        </div>
+      }
+    }
+  </div>
+
+  <p class="team-card__meta">Created {{ createdLabel() }}</p>
+</article>

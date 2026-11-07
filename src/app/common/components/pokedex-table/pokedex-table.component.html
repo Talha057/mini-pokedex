@@ -1,0 +1,77 @@
+<div class="pokedex-table__scroll">
+  <table class="pokedex-table" [attr.aria-busy]="loading()">
+    <thead>
+      <tr>
+        <th scope="col" aria-label="Sprite"></th>
+        <th scope="col" class="pokedex-table__head">Name</th>
+        <th scope="col" class="pokedex-table__head">Types</th>
+        @for (column of statColumns; track column.field) {
+          <th
+            scope="col"
+            class="pokedex-table__head pokedex-table__head--stat"
+            [attr.aria-sort]="ariaSort(column.field)"
+          >
+            <button
+              type="button"
+              class="pokedex-table__sort"
+              [disabled]="loading()"
+              (click)="sortChange.emit(column.field)"
+            >
+              {{ column.label }}
+              @if (sortField() === column.field) {
+                <span aria-hidden="true">{{ sortDirection() === 'asc' ? '▲' : '▼' }}</span>
+              }
+            </button>
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+        @for (index of skeletonRows(); track index) {
+          <tr class="pokedex-table__row" aria-hidden="true">
+            <td><app-skeleton width="40px" height="40px" radius="50%" /></td>
+            <td><app-skeleton width="110px" /></td>
+            <td><app-skeleton width="90px" height="20px" radius="100px" /></td>
+            @for (column of statColumns; track column.field) {
+              <td class="pokedex-table__stat"><app-skeleton width="28px" /></td>
+            }
+          </tr>
+        }
+      } @else {
+        @for (row of rows(); track row.id) {
+          <tr class="pokedex-table__row">
+            <td>
+              <img
+                class="pokedex-table__sprite"
+                [src]="row.spriteUrl"
+                width="40"
+                height="40"
+                alt=""
+                loading="lazy"
+              />
+            </td>
+            <td class="pokedex-table__name">
+              <span class="pokedex-table__id">#{{ row.id }}</span> {{ row.name }}
+            </td>
+            <td>
+              <div class="pokedex-table__types">
+                @for (type of row.types; track type) {
+                  <app-type-badge [type]="type" />
+                }
+              </div>
+            </td>
+            @for (column of statColumns; track column.field) {
+              <td
+                class="pokedex-table__stat"
+                [class.pokedex-table__stat--total]="column.field === 'total'"
+              >
+                {{ statValue(row, column.field) }}
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

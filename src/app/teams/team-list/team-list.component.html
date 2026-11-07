@@ -1,0 +1,51 @@
+<main class="teams">
+  <header class="teams__header">
+    <h1 class="teams__title">Teams</h1>
+    @if (status() === 'success') {
+      <p class="teams__count">{{ teams().length }} teams</p>
+    }
+  </header>
+
+  @if (mutationError(); as message) {
+    <div class="teams__alert" role="alert">
+      <span>{{ message }}</span>
+      <button type="button" (click)="dismissError()">Dismiss</button>
+    </div>
+  }
+
+  @switch (status()) {
+    @case ('error') {
+      <app-error-state [message]="errorMessage() ?? fallbackError" (retry)="retryTeams()" />
+    }
+    @case ('success') {
+      @if (views().length === 0) {
+        <app-empty-state
+          title="No teams yet"
+          message="Teams you create will show up here."
+        />
+      } @else {
+        <ul class="teams__list">
+          @for (view of views(); track view.team.id) {
+            <li>
+              <app-team-card
+                [view]="view"
+                [selected]="view.team.id === selectedTeamId()"
+                [statsStatus]="statsStatus()"
+                (teamSelect)="onSelect($event)"
+                (teamDelete)="onDelete($event)"
+                (statsRetry)="retryStats()"
+              />
+            </li>
+          }
+        </ul>
+      }
+    }
+    @default {
+      <ul class="teams__list" aria-busy="true">
+        @for (item of skeletonItems; track item) {
+          <li><app-skeleton height="220px" radius="12px" /></li>
+        }
+      </ul>
+    }
+  }
+</main>

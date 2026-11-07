@@ -1,0 +1,47 @@
+<main class="team-form">
+  <header class="team-form__header">
+    <a class="team-form__back" routerLink="/teams">← Teams</a>
+    <h1 class="team-form__title">New team</h1>
+  </header>
+
+  <form class="team-form__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="team-form__field">
+      <label for="team-name">Team name</label>
+      <input
+        id="team-name"
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        [attr.aria-invalid]="nameError() ? true : null"
+        aria-describedby="team-name-feedback"
+      />
+      <p id="team-name-feedback" class="team-form__feedback" aria-live="polite">
+        @if (form.controls.name.pending) {
+          Checking name…
+        } @else if (nameError(); as message) {
+          <span class="team-form__error">{{ message }}</span>
+        }
+      </p>
+    </div>
+
+    <div class="team-form__field">
+      <app-pokemon-picker
+        [selected]="form.controls.members.value"
+        [maxItems]="maxPokemon"
+        (pokemonAdd)="addPokemon($event)"
+        (pokemonRemove)="removePokemon($event)"
+        (pickerTouched)="markMembersTouched()"
+      />
+      @if (membersError(); as message) {
+        <p class="team-form__feedback team-form__error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="team-form__actions">
+      <a class="team-form__cancel" routerLink="/teams">Cancel</a>
+      <button type="submit" class="team-form__submit" [disabled]="formStatus() === 'PENDING'">
+        Create team
+      </button>
+    </div>
+  </form>
+</main>

@@ -4,7 +4,6 @@ import {
   BehaviorSubject, EMPTY, Observable, Subject, catchError, debounceTime, defer,
   distinctUntilChanged, exhaustMap, expand, map, tap,
 } from 'rxjs';
-import { SEARCH_DEBOUNCE_MS } from '../../common/constant';
 import { LoggerService } from '../../core/logger.service';
 import {
   DEFAULT_PAGE_SIZE, LOAD_ERROR_MESSAGE, POKEMON_CHUNK_SIZE,
@@ -12,6 +11,8 @@ import {
 import { PageSize, PokemonState, SortField } from '../models/pokemon-state.model';
 import { Pokemon } from '../models/pokemon.model';
 import { PokemonApiService } from '../services/pokemon-api.service';
+import { POKEMON_CACHE_DURATION_MS, SEARCH_DEBOUNCE_MS } from '../../common/constant';
+import { CacheService, POKEMON_LIST_CACHE_KEY } from '../../common/services/cache.service';
 
 const INITIAL_STATE: PokemonState = {
   entities: [],
@@ -29,7 +30,7 @@ const INITIAL_STATE: PokemonState = {
 export class PokemonStore {
   private readonly api = inject(PokemonApiService);
   private readonly logger = inject(LoggerService);
-
+  private readonly cache = inject(CacheService);
   private readonly stateSubject = new BehaviorSubject<PokemonState>(INITIAL_STATE);
   private readonly loadRequests$ = new Subject<void>();
   private readonly searchInput$ = new Subject<string>();
@@ -56,11 +57,19 @@ export class PokemonStore {
   }
 
  
-  load(): void {
-    if (this.snapshot.status === 'success') return;
-    this.loadRequests$.next();
-  }
+ load(): void {
+  if (this.snapshot.status === 'success') return;
+  if (this.restoreFromCache()) return;
+  this.loadRequests$.next();
+}
 
+private restoreFromCache(): boolean {
+  if (this.snapshot.entities.length > 0) return false;
+  const cached = this.cache.get<Pokemon[]>(POKEMON_LIST_CACHE_KEY, 'local', POKEMON_CACHE_DURATION_MS);
+  if (!cached?.length) return false;
+  this.patch({ entities: cached, status: 'success', errorMessage: null });
+  return true;
+}
   setSearchTerm(term: string): void {
     this.searchInput$.next(term);
   }
@@ -93,7 +102,10 @@ export class PokemonStore {
     return this.fetchChunks$(this.snapshot.entities.length).pipe(
       tap({
         next: (chunk) => this.patch({ entities: [...this.snapshot.entities, ...chunk] }),
-        complete: () => this.patch({ status: 'success' }),
+        complete: () => {
+  this.patch({ status: 'success' });
+  this.cache.set(POKEMON_LIST_CACHE_KEY, this.snapshot.entities);
+},
       }),
       catchError((error: unknown) => {
         this.logger.error('loading pokemon failed', { error });

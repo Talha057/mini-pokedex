@@ -31,6 +31,7 @@ describe('PokemonSelectors', () => {
   let selectors: PokemonSelectors;
 
   beforeEach(() => {
+    localStorage.clear();
     vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [{ provide: PokemonApiService, useValue: { getPokemonPage$: () => of(FIXTURES) } }],

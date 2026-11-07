@@ -10,4 +10,5 @@ export const routes: Routes = [
   loadChildren: () => import('./teams/teams.routes').then((m) => m.teamsRoutes),
 },
   { path: '', redirectTo: 'pokedex', pathMatch: 'full' },
+   { path: '**', redirectTo: 'pokedex' },
 ];

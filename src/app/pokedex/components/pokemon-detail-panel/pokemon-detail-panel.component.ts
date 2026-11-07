@@ -26,11 +26,11 @@ const FAILED: AbilitiesState = { status: 'error', abilities: [] };
   templateUrl: './pokemon-detail-panel.component.html',
   styleUrl: './pokemon-detail-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '(document:keydown.escape)': 'close.emit()' },
+  host: { '(document:keydown.escape)': 'closed.emit()' },
 })
 export class PokemonDetailPanelComponent {
   readonly pokemon = input.required<Pokemon>();
-  readonly close = output<void>();
+  readonly closed = output<void>();
 
   private readonly api = inject(PokemonApiService);
   private readonly logger = inject(LoggerService);

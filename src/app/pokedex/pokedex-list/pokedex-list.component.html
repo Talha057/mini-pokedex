@@ -69,6 +69,6 @@
     }
   }
   @if (selectedPokemon(); as pokemon) {
-  <app-pokemon-detail-panel [pokemon]="pokemon" (close)="closePanel()" />
+  <app-pokemon-detail-panel [pokemon]="pokemon" (closed)="closePanel()" />
 }
 </main>

@@ -1,0 +1,148 @@
+@use '../../../common/styles/shared' as *;
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: min(var(--panel-width), 100vw);
+  background: var(--color-surface);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.4);
+  animation: panel-slide-in 250ms ease-out;
+
+  &__close-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 12px 0;
+  }
+
+  &__close-btn {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-surface-2);
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-primary);
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 0 16px 24px;
+    overflow-y: auto;
+    @include custom-scrollbar;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__sprite {
+    image-rendering: pixelated;
+  }
+
+  &__name {
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  &__id {
+    margin: 2px 0 8px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__types {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 16px 0;
+
+    div {
+      padding: 8px;
+      text-align: center;
+      background: var(--color-surface-2);
+      border-radius: 8px;
+    }
+
+    dt {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    dd {
+      margin: 2px 0 0;
+      font-weight: 600;
+    }
+  }
+
+  &__section-title {
+    margin: 16px 0 8px;
+    font-size: 16px;
+  }
+
+  &__abilities-loading {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__abilities {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__ability {
+    margin-bottom: 12px;
+  }
+
+  &__ability-name {
+    text-transform: capitalize;
+  }
+
+  &__hidden-tag {
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 100px;
+    background: var(--color-accent);
+    color: #131515;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  &__ability-effect {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  &__empty {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+@keyframes panel-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

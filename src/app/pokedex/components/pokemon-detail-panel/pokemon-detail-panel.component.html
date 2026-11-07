@@ -1,0 +1,78 @@
+<aside class="panel" role="dialog" aria-modal="true" [attr.aria-label]="pokemon().name + ' details'">
+  <div class="panel__close-row">
+    <button type="button" class="panel__close-btn" aria-label="Close details" (click)="close.emit()">
+      ×
+    </button>
+  </div>
+
+  <div class="panel__content">
+    <header class="panel__header">
+      <img class="panel__sprite" [src]="pokemon().spriteUrl" width="96" height="96" alt="" />
+      <div>
+        <h2 class="panel__name">{{ pokemon().name }}</h2>
+        <p class="panel__id">#{{ pokemon().id }}</p>
+        <div class="panel__types">
+          @for (type of pokemon().types; track type) {
+            <app-type-badge [type]="type" />
+          }
+        </div>
+      </div>
+    </header>
+
+    <dl class="panel__facts">
+      <div>
+        <dt>Height</dt>
+        <dd>{{ heightMeters() }} m</dd>
+      </div>
+      <div>
+        <dt>Weight</dt>
+        <dd>{{ weightKg() }} kg</dd>
+      </div>
+      <div>
+        <dt>Base total</dt>
+        <dd>{{ pokemon().total }}</dd>
+      </div>
+    </dl>
+
+    <app-stat-radar-chart [stats]="pokemon().stats" [label]="pokemon().name" />
+
+    <section class="panel__section" aria-live="polite">
+      <h3 class="panel__section-title">Abilities</h3>
+
+      @switch (abilitiesState().status) {
+        @case ('loading') {
+          <div class="panel__abilities-loading" aria-busy="true">
+            <app-skeleton height="18px" width="40%" />
+            <app-skeleton height="14px" />
+            <app-skeleton height="18px" width="50%" />
+            <app-skeleton height="14px" />
+          </div>
+        }
+        @case ('error') {
+          <app-error-state
+            message="Could not load abilities."
+            (retry)="retryAbilities()"
+          />
+        }
+        @case ('empty') {
+          <p class="panel__empty">No abilities are listed for this Pokémon.</p>
+        }
+        @default {
+          <ul class="panel__abilities">
+            @for (ability of abilitiesState().abilities; track ability.name) {
+              <li class="panel__ability">
+                <strong class="panel__ability-name">{{ ability.name.replace('-', ' ') }}</strong>
+                @if (ability.isHidden) {
+                  <span class="panel__hidden-tag">Hidden</span>
+                }
+                @if (ability.effect) {
+                  <p class="panel__ability-effect">{{ ability.effect }}</p>
+                }
+              </li>
+            }
+          </ul>
+        }
+      }
+    </section>
+  </div>
+</aside>

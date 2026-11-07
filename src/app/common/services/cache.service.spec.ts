@@ -1,17 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createMemoryStorage } from '../../../testing/memory-storage';
 import { CacheService } from './cache.service';
 
 describe('CacheService', () => {
   let cache: CacheService;
 
   beforeEach(() => {
-    localStorage.clear();
+    vi.stubGlobal('localStorage', createMemoryStorage());
     vi.useFakeTimers();
     cache = TestBed.inject(CacheService);
   });
 
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
 
   it('returns a stored value while it is fresh', () => {
     cache.set('key', { id: 1 });

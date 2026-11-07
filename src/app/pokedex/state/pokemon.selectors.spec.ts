@@ -5,7 +5,7 @@ import { Pokemon } from '../models/pokemon.model';
 import { PokemonApiService } from '../services/pokemon-api.service';
 import { PokemonSelectors } from './pokemon.selectors';
 import { PokemonStore } from './pokemon.store';
-
+import { createMemoryStorage } from '../../../testing/memory-storage';
 function makePokemon(id: number, name: string, types: string[], speed: number): Pokemon {
   return {
     id,
@@ -31,7 +31,7 @@ describe('PokemonSelectors', () => {
   let selectors: PokemonSelectors;
 
   beforeEach(() => {
-    localStorage.clear();
+    vi.stubGlobal('localStorage', createMemoryStorage());
     vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [{ provide: PokemonApiService, useValue: { getPokemonPage$: () => of(FIXTURES) } }],
@@ -41,7 +41,10 @@ describe('PokemonSelectors', () => {
     store.load();
   });
 
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
   it('filters by type and sorts by a stat, highest first', async () => {
     store.setTypeFilter('fire');

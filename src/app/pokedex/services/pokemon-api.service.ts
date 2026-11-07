@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, timeout } from 'rxjs';
 import { API_REQUEST_TIMEOUT_MS } from '../../common/constant';
 import { GraphqlResponse, unwrapGraphql } from '../../common/utils/graphql.util';
 import { retryWithDelay } from '../../common/utils/retry-with-delay.util';
 import { POKEAPI_GRAPHQL_URL, SPRITE_BASE_URL, STAT_NAMES } from '../constants/pokedex.constants';
 import { Pokemon, PokemonAbility, StatName } from '../models/pokemon.model';
+import { Observable, map, of, tap, timeout } from 'rxjs';
+import { CacheService } from '../../common/services/cache.service';
 
 interface PokemonDto {
   id: number;
@@ -58,7 +59,7 @@ const GET_ABILITIES = `
 @Injectable({ providedIn: 'root' })
 export class PokemonApiService {
   private readonly http = inject(HttpClient);
-
+private readonly cache = inject(CacheService);
   getPokemonPage$(limit: number, offset: number): Observable<Pokemon[]> {
     return this.query$<{ pokemon: PokemonDto[] }>(GET_POKEMON, { limit, offset }).pipe(
       map((data) => data.pokemon.map(toPokemon)),
@@ -72,16 +73,21 @@ export class PokemonApiService {
   }
 
   getAbilities$(pokemonId: number): Observable<PokemonAbility[]> {
-    return this.query$<{ pokemonability: AbilityDto[] }>(GET_ABILITIES, { pokemonId }).pipe(
-      map((data) =>
-        data.pokemonability.map((row) => ({
-          name: row.ability.name,
-          effect: row.ability.abilityeffecttexts[0]?.short_effect ?? '',
-          isHidden: row.is_hidden,
-        })),
-      ),
-    );
-  }
+  const cacheKey = `abilities:${pokemonId}`;
+  const cached = this.cache.getInApp<PokemonAbility[]>(cacheKey);
+  if (cached) return of(cached);
+
+  return this.query$<{ pokemonability: AbilityDto[] }>(GET_ABILITIES, { pokemonId }).pipe(
+    map((data) =>
+      data.pokemonability.map((row) => ({
+        name: row.ability.name,
+        effect: row.ability.abilityeffecttexts[0]?.short_effect ?? '',
+        isHidden: row.is_hidden,
+      })),
+    ),
+    tap((abilities) => this.cache.setInApp(cacheKey, abilities)),
+  );
+}
 
   private query$<T>(query: string, variables: Record<string, unknown>): Observable<T> {
     return this.http

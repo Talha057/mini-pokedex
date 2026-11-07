@@ -5,6 +5,15 @@ export const POKEMON_CHUNK_SIZE = 200;
 export const STAT_NAMES = [
   'hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed',
 ] as const;
+export const STAT_LABELS: Record<(typeof STAT_NAMES)[number], string> = {
+  hp: 'HP',
+  attack: 'Attack',
+  defense: 'Defense',
+  'special-attack': 'Sp. Atk',
+  'special-defense': 'Sp. Def',
+  speed: 'Speed',
+};
+export const STAT_MAX = 255; 
 export const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
 export const DEFAULT_PAGE_SIZE = PAGE_SIZE_OPTIONS[0];
 export const LOAD_ERROR_MESSAGE = 'Could not load Pokémon. Check your connection and try again.';

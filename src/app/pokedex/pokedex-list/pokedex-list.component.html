@@ -1,0 +1,69 @@
+<main class="pokedex">
+  <header class="pokedex__header">
+    <h1 class="pokedex__title">Pokédex</h1>
+    @if (isReady()) {
+      <p class="pokedex__count">{{ totalCount() }} Pokémon</p>
+    }
+  </header>
+
+  <section class="pokedex__filters" aria-label="Filters">
+    <label class="pokedex__field">
+      <span>Search</span>
+      <input
+        #searchInput
+        type="search"
+        placeholder="Search by name"
+        [disabled]="!isReady()"
+        (input)="onSearch(searchInput.value)"
+      />
+    </label>
+
+    <label class="pokedex__field">
+      <span>Type</span>
+      <select #typeSelect [disabled]="!isReady()" (change)="onTypeChange(typeSelect.value)">
+        <option value="">All types</option>
+        @for (type of typeOptions(); track type) {
+          <option [value]="type" [selected]="type === typeFilter()">{{ type }}</option>
+        }
+      </select>
+    </label>
+  </section>
+
+  @if (status() === 'error') {
+    <app-error-state [message]="errorMessage() ?? fallbackError" (retry)="retry()" />
+  } @else if (isReady() && totalCount() === 0) {
+    <app-empty-state
+      title="No Pokémon found"
+      message="Try a different name or clear the type filter."
+    />
+  } @else {
+    <app-pokedex-table
+      [rows]="rows()"
+      [loading]="!isReady()"
+      [sortField]="sortField()"
+      [sortDirection]="sortDirection()"
+      [skeletonRowCount]="pageSize()"
+      (sortChange)="onSort($event)"
+    />
+
+    @if (isReady()) {
+      <nav class="pokedex__pager" aria-label="Pagination">
+        <label class="pokedex__field pokedex__field--inline">
+          <span>Rows per page</span>
+          <select #sizeSelect (change)="onPageSizeChange(sizeSelect.value)">
+            @for (size of pageSizeOptions; track size) {
+              <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
+            }
+          </select>
+        </label>
+
+        <span class="pokedex__page-label">Page {{ pageIndex() + 1 }} of {{ pageCount() }}</span>
+
+        <button type="button" [disabled]="!canGoPrevious()" (click)="previousPage()">
+          Previous
+        </button>
+        <button type="button" [disabled]="!canGoNext()" (click)="nextPage()">Next</button>
+      </nav>
+    }
+  }
+</main>
